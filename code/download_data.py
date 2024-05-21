@@ -8,17 +8,17 @@ from astropy.io import fits
 from astroquery.vizier import Vizier
 
 instrument = 'apogee'
-apogee_type = 'apstar'
+apogee_type = 'aspcap'
 user_path = os.path.expanduser('~')
 data_path = f'{user_path}/ML/data'
 spec_path = f'{data_path}/spec'
 
-if apogee_type=='apstar':
+if apogee_type == 'apstar':
     prefix = 'apStar'
 elif apogee_type == 'apvisit':
     prefix = 'apVisit'
-else:
-    prefix = apogee_type
+elif apogee_type == 'aspcap':
+    prefix = 'aspcapStar'
 
 apogee_table = Vizier( 
     columns=['ID', 'Loc', 'RAJ2000', 'DEJ2000', 'SNR', 'HRV', 'e_HRV', 'Teff', 'e_Teff', 'logg', 'e_logg', 'Vsini', '[M/H]', 'e_[M/H]'], 
@@ -56,7 +56,7 @@ with open(f'{user_path}/ML/data/apogee_download.txt', 'w') as file:
 save_path = f'{data_path}/spec/'
 # Download data
 for i in tqdm(range(len(apogee_table))):
-    main_url = f"https://data.sdss.org/sas/dr17/apogee/spectro/redux/dr17/stars/apo25m/{field[i]}/apStar-dr17-{apogee_table['ID'][i]}.fits"
+    main_url = f"https://data.sdss.org/sas/dr17/apogee/spectro/aspcap/dr17/synspec_rev1/apo25m/{field[i]}/{prefix}-dr17-{apogee_table['ID'][i]}.fits"
     try:
         wget.download(main_url, save_path)
     except:

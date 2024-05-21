@@ -6,18 +6,19 @@ import apogee_tools as ap
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from astropy.table import Table
+from itertools import compress
 
 order = 'all'
 modelset = 'phoenix-aces-agss-cond-2011'
 instrument = 'apogee'
-apogee_type = 'apstar'
+apogee_type = 'aspcap'
 
-if apogee_type=='apstar':
+if apogee_type == 'apstar':
     prefix = 'apStar'
 elif apogee_type == 'apvisit':
     prefix = 'apVisit'
-else:
-    prefix = apogee_type
+elif apogee_type == 'aspcap':
+    prefix = 'aspcapStar'
 
 user_path = os.path.expanduser('~')
 data_path = f'{user_path}/ML/data'
@@ -40,9 +41,11 @@ else:
 
 N_stars = len(apogee_table)
 
-crval1 = 4.179
-cdelt1 = 6e-6
-wave = np.power(10, crval1 + cdelt1 * np.arange(8575))
+# crval1 = 4.179
+# cdelt1 = 6e-6
+# wave = np.power(10, crval1 + cdelt1 * np.arange(8575))
+spec = smart.Spectrum(name=apogee_table['ID'][0], path=f"{spec_path}/{prefix}-dr17-{apogee_table['ID'][0]}.fits", instrument=instrument, apply_sigma_mask=True, datatype=apogee_type, applytell=True)
+wave = spec.oriWave
 
 fluxes = []
 for i in tqdm(range(len(apogee_table['ID']))):
@@ -57,12 +60,13 @@ for i in tqdm(range(len(apogee_table['ID']))):
     spec.wave = np.ma.array(spec.oriWave, mask=spec.mask)
     spec.flux = np.ma.array(spec.oriFlux, mask=spec.mask)
     spec.noise = np.ma.array(spec.oriNoise, mask=spec.mask)
-    spec.oriFlux /= np.nanmedian(spec.oriFlux)
-    spec.flux /= np.ma.median(spec.flux)
     # model = smart.makeModel(teff=teff, logg=logg, metal=metal, vsini=vsini, rv=rv, instrument=instrument, order=order, modelset=modelset, data=spec, lsf=lsf, xlsf=xlsf)
     fluxes.append(spec.flux)
 
-fluxes = np.ma.array(fluxes)
+same_length = np.array([len(_) for _ in fluxes])==7514
+fluxes = np.shape(np.array(list(compress(fluxes, same_length))))
+apogee_table = apogee_table[same_length]
+apogee_table.write(f'{user_path}/ML/Group7-Project/data/apogee_table.csv', overwrite=True)
 
 spectra = {}
 for key in apogee_table.keys():
