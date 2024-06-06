@@ -25,14 +25,14 @@ with open(f'{data_path}/simulated_spectra_3_params.pkl', 'rb') as file:
     simulated_spectra = pickle.load(file)
 
 wave = simulated_spectra['wave']
-flux = simulated_spectra['flux']
+flux = simulated_spectra['flux_with_noise']
 params = np.array([simulated_spectra[_] for _ in ['teff', 'rv', 'vsini']]).T
 
 # np.random.seed(0)
 
 # simulator
-logg = 4.
-metal = 0.
+logg = simulated_spectra['logg']
+metal = simulated_spectra['metal']
 instrument = 'apogee'
 order = 'all'
 modelset = 'phoenix-aces-agss-cond-2011'
@@ -102,7 +102,6 @@ if new_run:
     engine.fit(
         x=flux,
         y=params,
-        # n_sims=20000,
         n_rounds=1,
         n_epochs=10,
         batch_size=256,

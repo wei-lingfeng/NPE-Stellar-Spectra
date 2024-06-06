@@ -9,7 +9,7 @@ from tqdm import tqdm
 from multiprocessing import Pool
 
 test = False
-n_params = 5
+n_params = 3
 assert n_params in [3, 5], 'n_params must be either 3(teff, rv, vsini) or 5(teff, rv, vsini, logg, metal)'
 
 user_path = os.path.expanduser('~')
@@ -29,7 +29,10 @@ if not test:
 if test:
     size=1
 else:
-    size = 50000
+    if n_params == 3:
+        size = 20000
+    elif n_params == 5:
+        size = 50000
 
 teff    = np.random.uniform(low=2300., high=7000., size=size)
 rv      = np.random.uniform(low=-200., high=200., size=size)
