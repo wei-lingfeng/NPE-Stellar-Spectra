@@ -1,2 +1,5 @@
-data/spectra.pkl
+data/*.pkl
+data/lsf.npy
+data/best_model*
+data/test_nbi
 **__pycache__

@@ -21,7 +21,7 @@ elif apogee_type == 'aspcap':
     prefix = 'aspcapStar'
 
 user_path = os.path.expanduser('~')
-data_path = f'{user_path}/ML/data'
+data_path = f'{user_path}/ML/Group7-Project/data'
 spec_path = f'{data_path}/spec'
 apogee_table = Table.read(f'{data_path}/apogee_table.csv')
 
@@ -46,6 +46,9 @@ N_stars = len(apogee_table)
 # wave = np.power(10, crval1 + cdelt1 * np.arange(8575))
 spec = smart.Spectrum(name=apogee_table['ID'][0], path=f"{spec_path}/{prefix}-dr17-{apogee_table['ID'][0]}.fits", instrument=instrument, apply_sigma_mask=True, datatype=apogee_type, applytell=True)
 wave = spec.oriWave
+# Save wavelength
+with open(f'{data_path}/wavelength.npy', 'wb') as file:
+    np.save(file, wave)
 
 fluxes = []
 for i in tqdm(range(len(apogee_table['ID']))):
