@@ -15,13 +15,13 @@ from matplotlib.lines import Line2D
 warnings.filterwarnings("ignore", category=UserWarning, module="multiprocessing.resource_tracker")
 
 user_path = os.path.expanduser('~')
-data_path = '/stow/weilingfeng/data/apogee/'
+data_path = '/stow/weilingfeng/data/apogee'
 save_path = f'{data_path}/nbi_3_params'
 
 new_run = True
 
 # Read simulated spectra
-with open(f'{data_path}/simulated_spectra_old.pkl', 'rb') as file:
+with open(f'{data_path}/simulated_spectra_3_params.pkl', 'rb') as file:
     simulated_spectra = pickle.load(file)
 
 wave = simulated_spectra['wave']
