@@ -24,11 +24,6 @@ new_run = True
 with open(f'{data_path}/simulated_spectra_old.pkl', 'rb') as file:
     simulated_spectra = pickle.load(file)
 
-# read lsf
-with open('/home/weilingfeng/ML/Group7-Project/data/lsf.npy', 'rb') as file:
-    lsf = np.load(file)
-    xlsf = np.load(file)
-    
 wave = simulated_spectra['wave']
 flux = simulated_spectra['flux']
 params = np.array([simulated_spectra[_] for _ in ['teff', 'rv', 'vsini']]).T
@@ -41,8 +36,8 @@ metal = 0.
 instrument = 'apogee'
 order = 'all'
 modelset = 'phoenix-aces-agss-cond-2011'
-# lsf  = simulated_spectra['lsf']
-# xslf = simulated_spectra['xlsf']
+lsf  = simulated_spectra['lsf']
+xlsf = simulated_spectra['xlsf']
 
 def simulate_spectra(params):
     teff, rv, vsini = params
@@ -97,10 +92,10 @@ if new_run:
     engine = nbi.NBI(
         flow=flow,
         featurizer=featurizer,
-        simulator=simulate_spectra,
+        # simulator=simulate_spectra,
         priors=priors,
         labels=labels,
-        device='cpu',
+        device='cuda',
         path=save_path
     )
 
@@ -131,7 +126,6 @@ else:
         labels=labels,
         device='cuda',
         path=save_path
-        # n_jobs=16
     )
 
 plt.figure(figsize=(12, 3))
