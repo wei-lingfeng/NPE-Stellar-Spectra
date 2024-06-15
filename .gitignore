@@ -2,4 +2,6 @@ data/*.pkl
 data/lsf.npy
 data/best_model*
 data/test_nbi
+data/nbi_*
+data/spec
 **__pycache__

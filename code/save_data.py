@@ -67,7 +67,7 @@ for i in tqdm(range(len(apogee_table['ID']))):
     fluxes.append(spec.flux)
 
 same_length = np.array([len(_) for _ in fluxes])==7514
-fluxes = np.shape(np.array(list(compress(fluxes, same_length))))
+fluxes = np.ma.array(list(compress(fluxes, same_length)))
 apogee_table = apogee_table[same_length]
 apogee_table.write(f'{user_path}/ML/Group7-Project/data/apogee_table.csv', overwrite=True)
 
@@ -80,5 +80,5 @@ spectra['flux'] = fluxes
 spectra['lsf']  = lsf
 spectra['xlsf'] = np.linspace(-7.,7.,43)
 
-with open(f'{data_path}/spectra.pkl', 'wb') as file:
+with open(f'{data_path}/real_spectra.pkl', 'wb') as file:
     pickle.dump(spectra, file)
