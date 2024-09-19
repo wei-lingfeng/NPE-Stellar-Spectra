@@ -1,4 +1,4 @@
-# Group7-Project
+# Neural Posterior Estimation of Stellar Spectra
 
 Repo for Machine Learning Project.
 
